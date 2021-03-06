@@ -11,11 +11,16 @@ RUN set -ex; \
 		rm -rf /var/lib/apt/lists/*; \
 	fi
 
+ENV PUID 1101
+ENV PGID 1101
+ARG PUID=1101
+ARG PGID=1101
+
 # explicitly set user/group IDs
 RUN set -eux; \
-	groupadd -r postgres --gid=999; \
+	groupadd -r postgres --gid=${PGID}; \
 # https://salsa.debian.org/postgresql/postgresql-common/blob/997d842ee744687d99a2b2d95c1083a2615c79e8/debian/postgresql-common.postinst#L32-35
-	useradd -r -g postgres --uid=999 --home-dir=/var/lib/postgresql --shell=/bin/bash postgres; \
+	useradd -r -g postgres --uid=${PUID} --home-dir=/var/lib/postgresql --shell=/bin/bash postgres; \
 # also create the postgres user's home directory with appropriate permissions
 # see https://github.com/docker-library/postgres/issues/274
 	mkdir -p /var/lib/postgresql; \
